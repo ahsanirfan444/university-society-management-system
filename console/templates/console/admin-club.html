@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load member_count %}
+
+{% block title %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block header %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'admin_console' %}">Dashboard</a></li> -->
+    <li class="write"><a href="{% url 'admin_club' %}">Club Management</a></li>
+    <li class="edit"><a href="{% url 'admin_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'admin_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'admin_enquiries' %}">Students Enquires</a></li>
+    <li class="users"><a href="{% url 'admin_manage_users' %}">Manage Users</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Club list</h2>
+    <table>
+      <tr>
+        <th>Club name</th>
+        <th>Created at</th>
+        <th>Total members</th>
+        <th>Action</th>
+      </tr>
+      {% for club in clubs %}
+      <tr>
+        <td>{{ club.name }}</td>
+        <td>{{ club.at }}</td>
+        <td>{{ club.id|member_count }}</td>
+        <td><a style="color: red; font-weight: bolder;" href="?delete={{ club.id }}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <section class="panel important">
+    <h2>Create a new Club</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="twothirds">
+        <label for="club_name">Club Name:</label>
+        <input type="text" required name="club_name" id="club_name" placeholder="Enter club name" />
+
+        <label for="textarea">Club Description:</label>
+        <textarea cols="40" rows="8" name="club_des" required id="textarea"></textarea>
+      </div>
+      <div class="onethird">
+        <legend>Approved by university?</legend>
+
+        <label for="radio-choice-1">
+          <input type="radio" name="club_approved" checked id="radio-choice-1" value="1" /> Yes
+        </label>
+
+        <label for="radio-choice-2">
+          <input type="radio" name="club_approved" id="radio-choice-2" value="0" /> No
+        </label>
+        <div>
+          <input type="submit" value="Submit" />
+        </div>
+      </div>
+    </form>
+  </section>
+  <section class="panel important">
+    <h2>Club Members</h2>
+    <table>
+      <tr>
+        <th>User</th>
+        <th>Club</th>
+        <th>Joined at</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      {% for member in members %}
+      <tr>
+        <td>{{ member.user.username }}</td>
+        <td>{{ member.club.name }}</td>
+        <td>{{ member.at }}</td>
+        <td><a href="?toggle_member={{ member.id }}">{% if member.status %}<span style="color: blue; font-weight: bolder;">Approved</span>{% else %}<span style="color: red; font-weight: bolder;">Pending</span>{% endif %}</a></td>
+        <td><a style="color: red; font-weight: bolder;" href="?delete_member={{ member.id }}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+</main>
+{% endblock %}

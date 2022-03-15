@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Advisor Console
+{% endblock %}
+
+{% block header %}
+Student Advisor Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'advisor_console' %}">Dashboard</a></li> -->
+    <li class="edit"><a href="{% url 'advisor_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'advisor_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'advisor_enquiries' %}">Students Enquires</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  {% for e in enquiries %}
+  <section class="panel important">
+    <h2>{{ e.question}} asked by {{ e.user }} </h2>
+    <form method="post" style="margin-top: -40px;">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ e.id }}">
+      <div class="twothirds">
+        <label for="textarea">{% if e.answer %}Already answered{% else %}Write your reply here:{% endif %}</label>
+        <textarea style="width: 98%;" rows="3" name="a" {% if e.answer %}disabled{% endif %} required id="textarea">{% if e.answer %}{{ e.answer }}{% endif %}</textarea>
+      </div>
+      <div class="onethird">
+        <div>
+          <input style="margin-top: 15%;" {% if e.answer %}disabled{% endif %} type="submit" value="{% if e.answer %}Answered{% else %}Answer Now{% endif %}" />
+        </div>
+      </div>
+    </form>
+  </section>
+  {% endfor %}
+</main>
+{% endblock %}

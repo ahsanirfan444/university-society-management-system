@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block header %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'admin_console' %}">Dashboard</a></li> -->
+    <li class="write"><a href="{% url 'admin_club' %}">Club Management</a></li>
+    <li class="edit"><a href="{% url 'admin_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'admin_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'admin_enquiries' %}">Students Enquires</a></li>
+    <li class="users"><a href="{% url 'admin_manage_users' %}">Manage Users</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Classroom list</h2>
+    <table>
+      <tr>
+        <th>Classroom name</th>
+        <th>Created at</th>
+        <th>Created by</th>
+        <th>Booked To</th>
+        <th>Book date</th>
+        <th>Action</th>
+      </tr>
+      {% for room in classroom %}
+      <tr>
+        <td>{{ room.name }}</td>
+        <td>{{ room.at }}</td>
+        <td>{{ room.user.username }}</td>
+        <td>{% if room.book_to %}{{ room.book_to.username }}{% else %}Nil{% endif %}</td>
+        <td>{% if room.book_date %}{{ room.book_date }}{% else %}Nil{% endif %}</td>
+        <td><a style="color:red; font-weight: bolder;" href="?delete={{ room.id }}">Delete Classroom</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <section class="panel important">
+    <h2>Create a new Classroom</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="twothirds">
+        <label for="classroom_name">Classroom Name:</label>
+        <input type="text" required name="classroom_name" id="classroom_name" placeholder="Enter classroom name" />
+
+        <label for="classroom_number">Classroom No.:</label>
+        <input type="number" required name="classroom_number" id="classroom_number" placeholder="Enter classroom number" />
+      
+        <label for="classroom_link">Classroom Online Link:</label>
+        <input type="text" required name="classroom_link" id="classroom_link" placeholder="Enter online classroom link (i.e: Zoom, meet)" />
+
+      </div>
+      <div class="onethird">
+        <label for="select-choice">Book to Advisor (Optional):</label>
+        <select name="book_to" id="select-choice">
+          <option value="" disabled selected>Select a staff/advisor</option>
+          {% for advisor in advisors %}
+          <option value="{{ advisor.id }}">{{ advisor.username }}</option>
+          {% endfor %}
+        </select>
+        <div>
+          <input type="submit" value="Submit" />
+        </div>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}

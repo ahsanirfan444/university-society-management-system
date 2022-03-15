@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block header %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'admin_console' %}">Dashboard</a></li> -->
+    <li class="write"><a href="{% url 'admin_club' %}">Club Management</a></li>
+    <li class="edit"><a href="{% url 'admin_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'admin_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'admin_enquiries' %}">Students Enquires</a></li>
+    <li class="users"><a href="{% url 'admin_manage_users' %}">Manage Users</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Users list</h2>
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Joined at</th>
+        <th>Role</th>
+        <th>Current status</th>
+        <th>Action</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.date_joined }}</td>
+        <td>{% if user.is_superuser %}Officer{% elif user.is_staff %}Advisor{% else %}Student{% endif %}</td>
+        <td>{% if user.is_superuser %}---{% else %}<a href="?toggle_status={{ user.id }}">{% if user.is_active %}<span style="color: green; font-weight: bolder;">Currently active</span>{% else %}<span style="color: red; font-weight: bolder;">Currently Inactive</span>{% endif %}{% endif %}</a></td>
+        <td>{% if user.is_superuser %}---{% else %}<a style="color: red; font-weight: bolder;" href="?delete={{ user.id }}">Delete</a>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+</main>
+{% endblock %}

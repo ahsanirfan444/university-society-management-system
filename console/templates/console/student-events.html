@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block header %}
+Student Affairs Officer Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+    <ul class="main">
+        <!-- <li class="dashboard"><a href="{% url 'student_console' %}">Dashboard</a></li> -->
+        <li class="write"><a href="{% url 'student_club' %}">My Clubs</a></li>
+        <li class="arrows"><a href="{% url 'student_events' %}">Events</a></li>
+        <li class="comments"><a href="{% url 'student_enquiries' %}">My Enquires</a></li>
+        <!-- <li class="users"><a href="{% url 'student_profile' %}">My Profile</a></li> -->
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  {% for event in events %}
+  <section class="panel important">
+    <h2>{{event.title}} (Posted in {{ event.club.name }} at {{ event.at }})</h2>
+    <ul>
+      <li>{{ event.description }}</li>
+    </ul>
+  </section>
+  {% endfor %}
+</main>
+{% endblock %}

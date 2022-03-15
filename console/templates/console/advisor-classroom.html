@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student advisor Console
+{% endblock %}
+
+{% block header %}
+Student Advisor Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'advisor_console' %}">Dashboard</a></li> -->
+    <li class="edit"><a href="{% url 'advisor_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'advisor_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'advisor_enquiries' %}">Students Enquires</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Classroom list</h2>
+    <table>
+      <tr>
+        <th>Classroom name</th>
+        <th>Created at</th>
+        <th>Created by</th>
+        <th>Booked To</th>
+        <th>Book date</th>
+        <th>Action</th>
+      </tr>
+      {% for room in classroom %}
+      <tr>
+        <td>{{ room.name }}</td>
+        <td>{{ room.at }}</td>
+        <td>{{ room.user.username }}</td>
+        <td>{% if room.book_to %}{{ room.book_to.username }} {% if user == room.book_to %}(Me){% endif %} {% else %}Nil{% endif %}</td>
+        <td>{% if room.book_date %}{{ room.book_date }}{% else %}Nil{% endif %}</td>
+        <td>
+            {% if room.book_to %}
+                {% if user == room.book_to %}
+                    <a style="color:red; font-weight: bolder;" href="?remove={{ room.id }}">Remove classroom</a></td>
+                {% else %}
+                    ---
+                {% endif %}
+            {% else %}
+                <a style="color:green; font-weight: bolder;" href="?request={{ room.id }}">Request allocating</a></td>
+            {% endif %}
+            
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+</main>
+{% endblock %}

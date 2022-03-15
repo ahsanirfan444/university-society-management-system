@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Advisor Console
+{% endblock %}
+
+{% block header %}
+Student Advisor Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+    <ul class="main">
+        <!-- <li class="dashboard"><a href="{% url 'student_console' %}">Dashboard</a></li> -->
+        <li class="write"><a href="{% url 'student_club' %}">My Clubs</a></li>
+        <li class="arrows"><a href="{% url 'student_events' %}">Events</a></li>
+        <li class="comments"><a href="{% url 'student_enquiries' %}">My Enquires</a></li>
+        <!-- <li class="users"><a href="{% url 'student_profile' %}">My Profile</a></li> -->
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Ask a Question Here</h2><br>
+    <form method="post" style="margin-top: -40px;">
+        {% csrf_token %}
+      <div class="twothirds">
+        <input type="text" style="width: 98%;" rows="8" name="q" required id="textarea"></input>
+      </div>
+      <div class="onethird">
+        <div>
+          <input style="margin-top: -25%;" placeholder="Enter your question text here" type="submit" value="Ask Question" />
+        </div>
+      </div>
+    </form>
+  </section>
+
+  {% for e in enquiries %}
+  <section class="panel important">
+    <h2>{{e.question}} (Posted by {{ e.user.username }} at {{ e.at }})</h2>
+    <ul>
+        <li>
+            {% if e.answer %}
+              {{ e.answer }} (Answered by {{ e.replyer.username }})
+            {% else %}
+              Not answered yet
+            {% endif %}
+          </li>
+    </ul>
+  </section>
+  {% endfor %}
+</main>
+{% endblock %}

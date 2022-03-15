@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Advisor Console
+{% endblock %}
+
+{% block header %}
+Student Advisor Console
+{% endblock %}
+
+{% block nav %}
+<nav role="navigation">
+  <ul class="main">
+    <!-- <li class="dashboard"><a href="{% url 'advisor_console' %}">Dashboard</a></li> -->
+    <li class="edit"><a href="{% url 'advisor_classrooms' %}">Classrooms</a></li>
+    <li class="arrows"><a href="{% url 'advisor_events' %}">Events</a></li>
+    <li class="comments"><a href="{% url 'advisor_enquiries' %}">Students Enquires</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <section class="panel important">
+    <h2>Event list</h2>
+    <table>
+      <tr>
+        <th>Event title</th>
+        <th>Created at</th>
+        <th>Status</th>
+        <th>Created by</th>
+        <th>Club</th>
+        <th>Action</th>
+      </tr>
+      {% for event in events %}
+      <tr>
+        <td>{{ event.title }}</td>
+        <td>{{ event.at }}</td>
+        <td>{% if event.status %}<span style="color: blue; font-weight: bolder;">Aprroved</span>{% else %}<span style="color: red; font-weight: bolder;">Pending</span>{% endif %}</td>
+        <td>{{ event.user.username }}</td>
+        <td>{{ event.club.name }}</td>
+        <td><a style="color: red; font-weight:bolder;" href="?delete={{ event.id }}">delete</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <section class="panel important">
+    <h2>Create a new Event</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="twothirds">
+        <label for="event_title">Event title:</label>
+        <input type="text" required name="event_title" id="event_title" placeholder="Enter event title" />
+
+        <label for="textarea">Event Description:</label>
+        <textarea cols="40" rows="8" name="event_des" required id="textarea"></textarea>
+
+      </div>
+      <div class="onethird">
+        <label for="select-choice">Select Club:</label>
+        <select required name="club" id="select-choice">
+          <option value="" disabled selected>Select a club</option>
+          {% for club in clubs %}
+          <option value="{{ club.id }}">{{ club.name }}</option>
+          {% endfor %}
+        </select>
+        <div>
+          <input type="submit" value="Submit" />
+        </div>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}
